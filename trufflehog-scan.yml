@@ -1,0 +1,42 @@
+name: Trufflehog Scan
+
+on:
+  push:
+    paths:
+      - 'trufflehog-scan.sh'
+  schedule:
+    - cron: '0 0 * * 0'  # Run weekly on Sunday at midnight UTC
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  trufflehog-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Trufflehog
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-pip
+        pip3 install trufflehog
+
+    - name: Run Trufflehog scan
+      run: |
+        chmod +x ./trufflehog-scan.sh
+        ./trufflehog-scan.sh
+
+    - name: Upload scan results
+      uses: actions/upload-artifact@v2
+      with:
+        name: trufflehog-results
+        path: trufflehog_results/
+
+    - name: Check for secrets
+      run: |
+        if [ $(wc -l < trufflehog_results/results_table.csv) -gt 1 ]; then
+          echo "Secrets found in the scan. Please review results_table.csv"
+          exit 1
+        else
+          echo "No secrets found in the scan."
+        fi
