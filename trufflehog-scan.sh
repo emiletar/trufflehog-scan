@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Variables
-GITHUB_ORG="trufflesecurity"  # Replace with another GitHub organisation name as required. 
+GITHUB_ORG="ministryofjustice"  # Replace with another GitHub organisation name as required. 
 OUTPUT_DIR="./trufflehog_results"    # Directory to store output files
 TRUFFLEHOG_OUTPUT="$OUTPUT_DIR/trufflehog_output.json"
 CSV_OUTPUT="$OUTPUT_DIR/results_table.csv"
